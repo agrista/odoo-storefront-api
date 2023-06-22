@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="payment_provider_form" model="ir.ui.view">
+        <field name="name">Agrista Provider Form</field>
+        <field name="model">payment.provider</field>
+        <field name="inherit_id" ref="payment.payment_provider_form"/>
+        <field name="arch" type="xml">
+            <group name="provider_credentials" position='inside'>
+                <group attrs="{'invisible': [('code', '!=', 'agrista')]}">
+                    <field name="agrista_login" attrs="{'required':[('code', '=', 'agrista'), ('state', '!=', 'disabled')]}"/>
+                    <field name="agrista_transaction_key" password="True" attrs="{'required':[ ('code', '=', 'agrista'), ('state', '!=', 'disabled')]}"/>
+                    <field name="agrista_signature_key" password="True" attrs="{'required':[ ('code', '=', 'agrista'), ('state', '!=', 'disabled')]}"/>
+                    <label for="agrista_client_key"/>
+                    <div class="o_row" col="2">
+                        <field name="agrista_client_key"/>
+                        <button class="oe_link" icon="fa-refresh" type="object"
+                                name="action_update_merchant_details"
+                                string="Generate Client Key"/>
+                    </div>
+                    <a colspan="2" href="https://agrista.com/docs/payment-authorisation" target="_blank">
+                        How to get paid with Agrista
+                    </a>
+                </group>
+            </group>
+            <field name="display_as" position="before">
+                <field name="agrista_payment_method_type"
+                       attrs="{'invisible': [('code', '!=', 'agrista')], 'required':[('code', '=', 'agrista'), ('state', '!=', 'disabled')]}"/>
+            </field>
+            <field name="available_country_ids" position="after">
+                <label for="agrista_currency_id" string="Currency" attrs="{'invisible': [('code', '!=', 'agrista')]}"/>
+                <div  class="o_row" col="2" attrs="{'invisible': [('code', '!=', 'agrista')]}">
+                    <field name="agrista_currency_id"/>
+                    <button class="oe_link" icon="fa-refresh" type="object"
+                            name="action_update_merchant_details"
+                            string="Set Account Currency"/>
+                </div>
+            </field>
+        </field>
+    </record>
+
+</odoo>

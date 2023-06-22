@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="payment_provider_agrista" model="payment.provider">
+        <field name="name">Agrista</field>
+        <field name="code">agrista</field>
+        <field name="inline_form_view_id" ref="inline_form"/>
+        <field name="allow_tokenization">True</field>
+    </record>
+
+</odoo>
