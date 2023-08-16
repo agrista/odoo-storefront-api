@@ -12,7 +12,6 @@ from odoo.addons.graphql_base import OdooObjectType
 from odoo.exceptions import AccessError
 from odoo.http import request
 
-
 # --------------------- #
 #       ENUMS           #
 # --------------------- #
@@ -35,8 +34,8 @@ InvoiceStatus = graphene.Enum('InvoiceStatus', [('UpsellingOpportunity', 'upsell
 InvoiceState = graphene.Enum('InvoiceState', [('Draft', 'draft'), ('Posted', 'posted'), ('Cancelled', 'cancel')])
 
 PaymentTransactionState = graphene.Enum('PaymentTransactionState', [('Draft', 'draft'), ('Pending', 'pending'),
-                                                               ('Authorized', 'authorized'), ('Confirmed', 'done'),
-                                                               ('Canceled', 'cancel'), ('Error', 'error')])
+                                                                    ('Authorized', 'authorized'), ('Confirmed', 'done'),
+                                                                    ('Canceled', 'cancel'), ('Error', 'error')])
 
 
 class SortEnum(graphene.Enum):

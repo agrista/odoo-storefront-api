@@ -13,6 +13,7 @@ from odoo.addons.graphql_base import GraphQLControllerMixin
 from odoo.http import request, Response
 from odoo.tools.safe_eval import safe_eval
 from urllib.parse import urlparse
+from urllib.request import urlopen
 
 from ..schema import schema
 
@@ -46,7 +47,7 @@ class StorefrontBinary(Binary):
         try:
             ICP = request.env['ir.config_parameter'].sudo()
             storefront_image_resize_limit = int(ICP.get_param('storefront_image_resize_limit', 1920))
-            
+
             if width > storefront_image_resize_limit or height > storefront_image_resize_limit:
                 return request.not_found()
         except Exception:
@@ -92,7 +93,7 @@ class GraphQLController(http.Controller, GraphQLControllerMixin):
     def _set_website_context(self):
         """Set website context based on http_request_host header."""
         try:
-            request_host = request.httprequest.headers.environ['HTTP_RESQUEST_HOST']
+            request_host = request.httprequest.headers.environ['HTTP_REQUEST_HOST']
             website = request.env['website'].search([('domain', 'ilike', request_host)], limit=1)
             if website:
                 context = dict(request.context)
@@ -116,6 +117,21 @@ class GraphQLController(http.Controller, GraphQLControllerMixin):
     def graphiql(self, **kwargs):
         self._set_website_context()
         return self._handle_graphiql_request(schema.graphql_schema)
+
+    @http.route("/graphql/storefront/schema.json", method=['POST','GET'], website=False, auth="public", csrf=False)
+    def schema_json(self, **kwargs):
+        file_path = "http://localhost:8089/graphql_storefront/static/src/js/schema.json"
+        full_path = os.path.join(request.env['ir.config_parameter'].sudo().get_param('web.base.url'), file_path)
+        # file_data = json.loads(file_path)
+        # response = request.make_response(file_data)
+        response = urlopen(file_path)
+        schema = json.loads(response.read())
+        #response.headers[
+        #    'Content-Disposition'] = 'attachment; filename="schema.json"'
+        #response.mimetype = 'application/json'
+        return Response(json.dumps(schema),
+                        content_type='application/json;charset=utf-8', status=200)
+
 
     # The graphql route, for applications.
     # Note csrf=False: you may want to apply extra security
